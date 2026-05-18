@@ -1,0 +1,36 @@
+name: Post-deploy Test Email
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  send-test-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install server deps
+        working-directory: server
+        run: |
+          npm ci
+
+      - name: Run test email
+        working-directory: server
+        env:
+          # Provide these as GitHub repository secrets. Do NOT commit real secrets.
+          USE_AWS_SDK: ${{ secrets.USE_AWS_SDK }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+        run: |
+          # Exit with non-zero if test-email fails so CI indicates a problem
+          npm run test-email

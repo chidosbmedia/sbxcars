@@ -1,0 +1,38 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Server-side node_modules
+/server/node_modules/
+
+# Environment files
+.env
+/server/.env
+
+# AWS credentials stored locally (do NOT commit)
+/server/aws-credentials.json
+
+# Logs
+logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Build outputs
+/dist/
+/build/
+
+# Misc
+.cache/
+.parcel-cache/
+
+# Images or large assets (if you prefer not to commit local images)
+# assets/images/

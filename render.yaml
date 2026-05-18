@@ -1,0 +1,39 @@
+# Render service manifest (template).
+# Replace placeholders before linking the repo to Render.
+# This template configures a Docker-backed web service that runs the project's Dockerfile.
+
+services:
+  - type: web
+    name: sbxcars
+    runtime: docker
+    plan: free
+    branch: main
+    repo: https://github.com/<your-org>/<your-repo>
+    # Dockerfile path (relative to repo root)
+    dockerfilePath: ./Dockerfile
+    # Auto-deploy when Render detects changes pushed to `branch`.
+    autoDeployTrigger: commit
+    # Auto-deploy health check path (use simple path form compatible with Render blueprints)
+    healthCheckPath: /server/ready
+    envVars:
+      - key: PORT
+        value: "3001"
+      - key: USE_AWS_SDK
+        value: "true"
+      - key: AWS_REGION
+        value: "us-east-1"
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: TO_EMAIL
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+    # The above secret envVars use `sync: false` so Render prompts for values during Blueprint creation.
+
+# Notes:
+# - Add required secrets and environment variables in the Render dashboard, not in the repo.
+# - Render will build and run the Dockerfile; ensure Dockerfile's CMD starts the server on PORT.
+# - If you prefer to use Render's native Node environment instead of Docker, change `env` to `node` and
+#   provide `buildCommand` and `startCommand` fields instead of `dockerfilePath`.

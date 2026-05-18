@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="260" height="260" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style> .n { fill: #000; font-family: Inter, Arial, sans-serif; font-weight:700; font-size:220px; }</style>
+  </defs>
+  <g opacity="0.06">
+    <text class="n" x="10" y="200">3</text>
+  </g>
+</svg>
