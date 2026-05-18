@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Curl staging URL
+        continue-on-error: true
         run: |
           echo "Pinging sbxcars.onrender.com to keep instance awake"
-          curl -fsS --max-time 10 https://sbxcars.onrender.com || (echo 'Ping failed' && exit 1)
+          # Retry a few times and increase timeout to reduce intermittent failures
+          curl -fsS --max-time 30 --retry 3 --retry-delay 5 --retry-connrefused https://sbxcars.onrender.com || echo 'Ping failed (non-fatal)'
