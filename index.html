@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>SBX | Auctions Prototype</title>
+    <title>SBX Cars Private Sales</title>
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://use.typekit.net/rwx2qfc.css" />
+    <link rel="stylesheet" href="https://use.typekit.net/aje8ncp.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,800;1,400&family=DM+Serif+Display&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
@@ -50,56 +50,57 @@
             <div class="container">
               <h1>Powered By</h1>
               <div class="sell-cta-logo">
-                <img src="assets/images/logos/sbxlogo-sell-page.jpg" alt="SupercarBlondie" loading="lazy" />
-              </div>
-              <p class="muted">Should your vehicle qualify, our expert sales specialist will contact you to learn more about it</p>
+                  <img src="assets/images/logos/sbxlogo-sell-page.jpg" alt="SupercarBlondie" loading="lazy" />
+                </div>
+                <!-- moved sell form into this container to sit directly under the powered-by area -->
+                <div class="sell-card sell-card--full" style="margin:24px auto 0;">
+                  <h3>Enter your vehicle information</h3>
+                  <p class="muted">Should your vehicle qualify, our expert sales specialist will contact you to learn more about it</p>
+                  <form id="sellForm" class="sell-form-form" novalidate>
+                    <div class="row">
+                      <fieldset style="border:0;padding:0;margin:0">
+                        <legend style="position:absolute;left:-9999px">Transaction type</legend>
+                        <label style="margin-right:12px"><input type="radio" name="transactionType" value="buy" required> Buy</label>
+                        <label><input type="radio" name="transactionType" value="sell"> Sell</label>
+                      </fieldset>
+                    </div>
+                    <div class="row"><input name="year" aria-label="Year" placeholder="Year*" required /></div>
+                    <div class="row"><input name="make" aria-label="Make" placeholder="Make*" required /></div>
+                    <div class="row"><input name="model" aria-label="Model" placeholder="Model*" required /></div>
+                    <div class="row"><input name="location" aria-label="Location (city, country)" placeholder="Location (city, country)*" required /></div>
+                    <div class="row"><input name="mileage" aria-label="Mileage" placeholder="Mileage*" required /></div>
+                    <div class="row"><input name="vin" aria-label="VIN" placeholder="VIN (optional)" /></div>
+                    <div class="row">
+                      <select id="currency" name="currency" aria-label="Currency">
+                        <option value="" disabled selected>$</option>
+                        <option value="USD">USD — US Dollar</option>
+                        <option value="AUD">AUD — Australian Dollar</option>
+                        <option value="CAD">CAD — Canadian Dollar</option>
+                        <option value="EUR">EUR — Euro</option>
+                        <option value="AED">AED — UAE Dirham</option>
+                        <option value="GBP">GBP — British Pound</option>
+                        <option value="JPY">JPY — Japanese Yen</option>
+                        <option value="CHF">CHF — Swiss Franc</option>
+                      </select>
+                    </div>
+                    <div class="row"><input name="expectedPrice" aria-label="Expected Price" placeholder="Expected Price*" required /></div>
+                    <div class="row"><input name="fullName" aria-label="Full name" placeholder="Full name*" required /></div>
+                    <div class="row"><input name="email" aria-label="Email" type="email" placeholder="Email*" required /></div>
+                    <div style="display:none;visibility:hidden;"><label>Leave blank<input name="hp_name" autocomplete="off" /></label></div>
+                    <button class="btn-gold" type="submit">Confirm vehicle details</button>
+                    <p class="small-note">By submitting this form, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
+                    <div id="sellFormMessage" role="status" aria-live="polite" style="margin-top:12px"></div>
+                  </form>
+                  <div id="sellConfirm" style="display:none;text-align:center;padding:18px 12px">
+                    <h3>Thanks — your vehicle has been submitted</h3>
+                    <p>We will contact you shortly.</p>
+                  </div>
+                </div>
             </div>
           </div>
         </section>
 
-      <!-- Sell page recreated: hero with background image and floating form card -->
-      <section class="sell-page">
-        <div class="container">
-          <div class="sell-hero">
-            <div class="sell-card sell-card--full">
-              <h3>Enter your vehicle information</h3>
-              <p class="muted">Submit your vehicle for review. Our team of expert Specialists will contact you to learn more about your vehicle and walk you through the simple selling process.</p>
-              <form id="sellForm" class="sell-form-form" novalidate>
-                <div class="row"><input name="year" aria-label="Year" placeholder="Year*" required /></div>
-                <div class="row"><input name="make" aria-label="Make" placeholder="Make*" required /></div>
-                <div class="row"><input name="model" aria-label="Model" placeholder="Model*" required /></div>
-                <div class="row"><input name="mileage" aria-label="Mileage" placeholder="Mileage*" required /></div>
-                <div class="row"><input name="vin" aria-label="VIN" placeholder="VIN (optional)" /></div>
-                <div class="row">
-                  <select id="currency" name="currency" aria-label="Currency">
-                    <option value="" disabled selected>$</option>
-                    <option value="USD">USD — US Dollar</option>
-                    <option value="AUD">AUD — Australian Dollar</option>
-                    <option value="CAD">CAD — Canadian Dollar</option>
-                    <option value="EUR">EUR — Euro</option>
-                    <option value="AED">AED — UAE Dirham</option>
-                    <option value="GBP">GBP — British Pound</option>
-                    <option value="JPY">JPY — Japanese Yen</option>
-                    <option value="CHF">CHF — Swiss Franc</option>
-                  </select>
-                </div>
-                <div class="row"><input name="expectedPrice" aria-label="Expected Price" placeholder="Expected Price*" required /></div>
-                <div class="row"><input name="fullName" aria-label="Full name" placeholder="Full name*" required /></div>
-                <div class="row"><input name="email" aria-label="Email" type="email" placeholder="Email*" required /></div>
-                <div style="display:none;visibility:hidden;"><label>Leave blank<input name="hp_name" autocomplete="off" /></label></div>
-                <button class="btn-gold" type="submit">Confirm vehicle details</button>
-                <p class="small-note">By submitting this form, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
-                <div id="sellFormMessage" role="status" aria-live="polite" style="margin-top:12px"></div>
-              </form>
-              <div id="sellConfirm" style="display:none;text-align:center;padding:18px 12px">
-                <h3>Thanks — your vehicle has been submitted</h3>
-                <p>We will contact you shortly.</p>
-              </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Sell page removed; form moved into sell-cta for homepage layout -->
 
       <!-- how-it-works section removed per request -->
 

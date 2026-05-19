@@ -39,3 +39,8 @@ Thumbs.db
 
 # Ignore generated variants in assets/images that include a size suffix (e.g. -320, -1024)
 assets/images/**/*-[0-9]*.*
+
+# Local utility scripts used for audits and extraction — keep out of VCS (may contain fetched data)
+scripts/font-audit.js
+scripts/pdf-extract.js
+scripts/font-network-check.js

@@ -109,7 +109,9 @@ if(useAwsSdk){
 app.post('/api/sell', async (req, res) => {
   const body = req.body || {};
   const fields = {
+    transactionType: body.transactionType || '',
     year: body.year || '', make: body.make || '', model: body.model || '', mileage: body.mileage || '',
+    location: body.location || '',
     vin: body.vin || '', currency: body.currency || '$', expectedPrice: body.expectedPrice || '',
     fullName: body.fullName || '', email: body.email || ''
   };
@@ -119,7 +121,8 @@ app.post('/api/sell', async (req, res) => {
     return res.status(400).send('Spam detected');
   }
   // Basic validation
-  if(!fields.year || !fields.make || !fields.model || !fields.fullName || !fields.email){
+  // Require the newly-added fields as well: transactionType and location
+  if(!fields.transactionType || !fields.year || !fields.make || !fields.model || !fields.location || !fields.fullName || !fields.email){
     return res.status(400).send('Missing required fields');
   }
 
@@ -139,9 +142,9 @@ app.post('/api/sell', async (req, res) => {
     }
   }
 
-  const subject = `New Sell Submission — ${fields.make} ${fields.model} (${fields.year})`;
+  const subject = `${fields.transactionType ? fields.transactionType.toUpperCase() + ' - ' : ''}New Submission — ${fields.make} ${fields.model} (${fields.year})`;
   const text = Object.keys(fields).map(k=>`${k}: ${fields[k]}`).join('\n');
-  const html = `<h2>New Sell Submission</h2><p><strong>Vehicle</strong></p><ul>${Object.keys(fields).map(k=>`<li><strong>${escapeHtml(k)}:</strong> ${escapeHtml(fields[k])}</li>`).join('')}</ul>`;
+  const html = `<h2>New Submission</h2><p><strong>Details</strong></p><ul>${Object.keys(fields).map(k=>`<li><strong>${escapeHtml(k)}:</strong> ${escapeHtml(fields[k])}</li>`).join('')}</ul>`;
 
   // If AWS SDK is configured and enabled, use SES SDK to send
   if(useAwsSdk && awsConfigured && ses){
@@ -180,79 +183,7 @@ app.post('/api/sell', async (req, res) => {
   return res.status(500).send('No email provider configured');
 });
 
-// Contact form endpoint
-app.post('/api/contact', async (req, res) => {
-  const body = req.body || {};
-  const fields = {
-    name: body.name || '',
-    email: body.email || '',
-    phone: body.phone || '',
-    subject: body.subject || 'General inquiry',
-    message: body.message || ''
-  };
-
-  // Honeypot anti-spam: hidden field `hp_name` should be empty
-  if((body.hp_name || '').trim() !== ''){
-    return res.status(400).send('Spam detected');
-  }
-  // Basic validation
-  if(!fields.name || !fields.email || !fields.message){
-    return res.status(400).send('Missing required fields');
-  }
-
-  // Optional reCAPTCHA verification
-  if(body.recaptchaToken && process.env.RECAPTCHA_SECRET){
-    try{
-      const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-        method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: `secret=${encodeURIComponent(process.env.RECAPTCHA_SECRET)}&response=${encodeURIComponent(body.recaptchaToken)}`
-      });
-      const j = await verifyRes.json();
-      if(!j.success){
-        return res.status(400).send('reCAPTCHA verification failed');
-      }
-    }catch(err){
-      console.warn('reCAPTCHA verify error',err.message);
-    }
-  }
-
-  const subject = `Website Contact — ${fields.subject} (${fields.name})`;
-  const text = Object.keys(fields).map(k=>`${k}: ${fields[k]}`).join('\n');
-  const html = `<h2>Website Contact</h2><ul>${Object.keys(fields).map(k=>`<li><strong>${escapeHtml(k)}:</strong> ${escapeHtml(fields[k])}</li>`).join('')}</ul>`;
-
-  if(useAwsSdk && awsConfigured && ses){
-    const params = {
-      Source: process.env.SMTP_FROM || process.env.SMTP_USER || `no-reply@${process.env.TO_EMAIL?.split('@')[1] || 'example.com'}`,
-      Destination: { ToAddresses: [TO_EMAIL] },
-      ReplyToAddresses: [ fields.email || process.env.SMTP_FROM || process.env.SMTP_USER ],
-      Message: {
-        Subject: { Data: subject },
-        Body: { Html: { Data: html }, Text: { Data: text } }
-      }
-    };
-    try{
-      await ses.sendEmail(params).promise();
-      return res.status(200).json({ok:true,via:'ses-sdk'});
-    }catch(err){
-      console.error('SES sendEmail error',err);
-      return res.status(500).send('SES send failed');
-    }
-  }
-
-  if(transporter && transporter.sendMail && smtpAvailable){
-    try{
-      await transporter.sendMail({from: process.env.SMTP_FROM || process.env.SMTP_USER, to: TO_EMAIL, subject, text, html, replyTo: fields.email || process.env.SMTP_FROM});
-      return res.status(200).json({ok:true,via:'smtp'});
-    }catch(err){
-      console.error('sendMail error',err);
-      return res.status(500).send('Email send failed');
-    }
-  }
-
-  console.error('No email provider configured: neither AWS SES nor SMTP available');
-  console.error('Contact submission content:', text);
-  return res.status(500).send('No email provider configured');
-});
+// Contact form endpoint removed — not required for current site.
 
 // Serve static files with HTML extension fallback so clean URLs like '/contact' work
 app.use(express.static(staticDir, { extensions: ['html'] }));
