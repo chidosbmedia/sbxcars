@@ -44,3 +44,10 @@ assets/images/**/*-[0-9]*.*
 scripts/font-audit.js
 scripts/pdf-extract.js
 scripts/font-network-check.js
+scripts/font-activation-check.js
+scripts/font-deep-check.js
+scripts/font-inspect.js
+scripts/font-render-check.js
+
+# Temp capture directory for font debug
+tmp/
