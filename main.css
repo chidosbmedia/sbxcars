@@ -481,6 +481,7 @@ main > section{transition:background-color .2s ease}
 .sell-card h3{margin:0 0 6px;font-size:18px}
 .sell-card h3{margin:0 0 6px;font-size:18px}
 .sell-card h3{ text-align:center; font-weight:800; font-size:20px; margin-bottom:12px }
+.sell-card .muted{margin-bottom:12px}
 .sell-card .muted{color:var(--sg-muted-2);margin-bottom:12px;text-align:center}
 .sell-form-form .row{display:flex;gap:12px;margin-bottom:12px}
 .sell-form-form input,.sell-form-form select{flex:1;padding:12px;border:1px solid #e9e9e9;border-radius:6px}
@@ -1082,6 +1083,11 @@ main{flex:1}
 .card-footer{display:flex;justify-content:space-between;align-items:center;font-weight:600}
 .price{color:var(--near-black)}
 .time{color:var(--muted-3);font-weight:400}
+
+/* Global override: force Proxima Nova UI across the site
+   Keeps Typekit and other styles intact but ensures Proxima Nova is used
+   for all elements (non-destructive; uses var(--font-ui) token). */
+html, body, body *{font-family:var(--font-ui) !important}
 
 
 /* Footer (restored dark site footer to match staging) */
